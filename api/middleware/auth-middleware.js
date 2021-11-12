@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 
 const validateUser = (req, res, next) => {
     const { username, password } = req.body
-    if (!username.trim() || !password.trim()) {
+    if (!username || !password) {
         next({ status: 400, message: 'username and password required'})
     } else {
         req.body.username = username.trim()
