@@ -46,7 +46,8 @@ router.post('/register', validateUser, checkUsernameUnique, (req, res, next) => 
 });
 
 router.post('/login', checkUsernameExists, (req, res) => {
-  res.end('implement login, please!');
+  const user = req.databaseUser
+  res.status(200).json({ message: `welcome ${user.username}`, token: buildToken(user)})
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -71,5 +72,16 @@ router.post('/login', checkUsernameExists, (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function buildToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username
+  }
+  const options = {
+    expiresIn: '1d'
+  }
+  return jwt.sign(payload, JWT_SECRET, options)
+}
 
 module.exports = router;
